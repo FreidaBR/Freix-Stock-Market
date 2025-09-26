@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FreiX — Track Market Performance Intelligently</title>
+
+  <!-- Add image.png to the left in the head section visually using CSS -->
+  <style>
+    .head-logo {
+      position: absolute;
+      top: 16px;
+      left: 24px;
+      height: 40px;
+      z-index: 2000;
+    }
+    @media (max-width: 576px) {
+      .head-logo {
+        top: 8px;
+        left: 8px;
+        height: 32px;
+      }
+    }
+    @media (max-width: 576px) {
+  .site-header .container {
+    flex-direction: row;
+    padding: 8px 12px;
+  }
+  .head-logo {
+    top: 8px;
+    left: 8px;
+    height: 32px;
+  }
+  #menuBtn {
+    font-size: 2.5rem;
+    padding: 8px;
+  }
+  #sideMenu {
+    width: 100vw;
+    right: -100vw;
+    padding: 24px 16px;
+    font-size: 1.1rem;
+  }
+  #sideMenu ul {
+    margin-top: 32px;
+  }
+  #closeMenu {
+    font-size: 2.5rem;
+    top: 12px;
+    right: 12px;
+  }
+}
+  </style>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Place the logo visually at the top-left of the page -->
+</head>
+<body>
+  <img src="image.png" alt="Logo" class="head-logo">
+  <header class="site-header" style="position: relative;">
+  <div class="container d-flex align-items-center justify-content-between">
+    <div class="brand" aria-label="FreiX">
+      <span class="brand-mark"></span>
+      <span class="brand-text"></span>
+    </div>
+    <!-- Menu button (hamburger) -->
+    <button id="menuBtn" class="btn btn-dark" style="background: none; border: none; font-size: 2rem;">
+      <span>&#9776;</span>
+    </button>
+  </div>
+  <!-- Side menu -->
+  <nav id="sideMenu" style="position: fixed; top: 0; right: -260px; width: 250px; height: 100vh; background: #18222b; color: #fff; box-shadow: -2px 0 8px rgba(0,0,0,0.15); transition: right 0.3s; z-index: 3000; padding: 32px 24px;">
+    <button id="closeMenu" style="background: none; border: none; color: #fff; font-size: 2rem; position: absolute; top: 16px; right: 16px;">&times;</button>
+    <ul style="list-style: none; padding: 0; margin-top: 48px;">
+      <li style="margin-bottom: 24px;"><a href="#" onclick="scrollToMarket(); closeMenu();" style="color: #fff; text-decoration: none; font-size: 1.2rem;">Market Data</a></li>
+      <li style="margin-bottom: 24px;"><a href="#" onclick="scrollToWatchlist(); closeMenu();" style="color: #fff; text-decoration: none; font-size: 1.2rem;">My Watchlist</a></li>
+      <li style="margin-bottom: 24px;"><a href="#" onclick="closeMenu();" style="color: #fff; text-decoration: none; font-size: 1.2rem;">Features</a></li>
+    </ul>
+  </nav>
+</header>
+
+  <div class="floating-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="row align-items-center">
+        <!-- Remove the empty logo column if not needed -->
+        <!-- Make the hero text column wider -->
+        <div class="col-lg-7">
+          <div class="hero-content">
+            <h1>Track Market Performance</h1>
+            <div class="hero-subtitle">Intelligently</div>
+            <p class="hero-description">
+              Real-time stock analysis, comprehensive market insights, and intelligent portfolio tracking in one powerful, beautiful platform
+            </p>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="phone-mockup">
+            <div class="phone-screen">
+              <div class="status-bar">
+                <div class="app-header">
+                  <div class="status-dot"></div>
+                  <span>StockTracker</span>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">
+                  <span style="color: #ef4444;">●</span>
+                </div>
+              </div>
+              
+              <div class="portfolio-card">
+                <div style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 8px;">Portfolio Value</div>
+                <div class="portfolio-value">₹127,450</div>
+                <div class="portfolio-change">+2.4% today</div>
+              </div>
+              
+              
+              
+              <div class="action-buttons">
+                <button class="btn btn-primary-custom flex-1" onclick="scrollToMarket()">Start Tracking</button>
+                <button class="btn btn-secondary-custom flex-1" onclick="scrollToWatchlist()">My Watchlist</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Market Data Section -->
+  <section class="market-section">
+    <div class="container">
+      <h2 class="section-title">Live Market Data</h2>
+      <p class="section-subtitle">
+        Stay ahead with real-time stock prices, comprehensive analytics, and intelligent market insights
+      </p>
+      
+      <div class="market-controls glass-card">
+        <input type="text" id="stockInput" class="search-input" placeholder="Enter stock symbol (e.g., TCS.BSE)" oninput="showSuggestions()">
+        <button class="btn btn-primary-custom" onclick="searchStock()">Search</button>
+        <select id="sectorSelect" class="filter-select" onchange="loadSectorStocks()">
+          <option value="">--Choose Sector--</option>
+        </select>
+        <div id="foundCount" style="font-size: 0.875rem; color: var(--text-muted);">
+          📊 0 stocks found
+        </div>
+        <div id="suggestions" class="w-100"></div>
+      </div>
+      
+      <div class="stock-grid" id="stocks-container"></div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title">Powerful Market Intelligence</h2>
+      <p class="section-subtitle">
+        Advanced tools and insights to help you make informed investment decisions
+      </p>
+      
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon analytics">📈</div>
+          <h3 class="feature-title">Real-Time Analytics</h3>
+          <p class="feature-description">
+            Live market data with instant price updates and performance tracking
+          </p>
+        </div>
+        
+        <div class="feature-card fade-in">
+          <div class="feature-icon charts">📊</div>
+          <h3 class="feature-title">Advanced Charts</h3>
+          <p class="feature-description">
+            Interactive price charts with technical indicators and historical data
+          </p>
+        </div>
+        
+        <div class="feature-card fade-in">
+          <div class="feature-icon portfolio">💰</div>
+          <h3 class="feature-title">Portfolio Insights</h3>
+          <p class="feature-description">
+            Comprehensive portfolio analysis with risk assessment and recommendations
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Watchlist Section -->
+<section class="watchlist-section mt-5">
+  <div class="container">
+    <h2 class="section-title">My Watchlist</h2>
+    <div id="watchlist-container" class="stock-grid"></div>
+  </div>
+</section>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+  <!-- Stock Details Modal -->
+<div class="modal fade" id="stockDetailsModal" tabindex="-1" aria-labelledby="stockDetailsLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" style="background: linear-gradient(135deg, #2d5a87 0%, #4a7ba7 100%); border: 1px solid rgba(255,255,255,0.2);">
+      <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <h5 class="modal-title text-white" id="stockDetailsLabel">
+          <span id="detailsSymbol">Stock Details</span>
+          <small class="text-muted ms-2">Live Market Data</small>
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-white">
+        <!-- Key Metrics Row -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="glass-card p-3 text-center">
+              <div class="small text-muted">Current Price</div>
+              <div class="h4 mb-0">₹<span id="detailsPrice">--</span></div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="glass-card p-3 text-center">
+              <div class="small text-muted">Sector</div>
+              <div class="h6 mb-0" id="detailsSector">--</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="glass-card p-3 text-center">
+              <div class="small text-muted">Change</div>
+              <div class="h6 mb-0" id="detailsChange">--</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="glass-card p-3 text-center">
+              <div class="small text-muted">Volume</div>
+              <div class="h6 mb-0" id="detailsVolume">--</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Price Chart -->
+        <div class="glass-card p-4 mb-4">
+          <h6 class="mb-3">Price History (Last 30 Days)</h6>
+          <div style="height: 300px; position: relative;">
+            <canvas id="detailsChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Additional Metrics will be inserted here by JavaScript -->
+        
+        <!-- Company Profile Section -->
+        <div class="glass-card p-4">
+          <h6 class="mb-3">Company Information</h6>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <strong>Market Cap:</strong> <span id="detailsMarketCap">Calculating...</span>
+              </div>
+              <div class="mb-3">
+                <strong>P/E Ratio:</strong> <span id="detailsPERatio">N/A</span>
+              </div>
+              <div class="mb-3">
+                <strong>52 Week Range:</strong> <span id="details52Week">N/A</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <strong>Exchange:</strong> <span id="detailsExchange">BSE</span>
+              </div>
+              <div class="mb-3">
+                <strong>Currency:</strong> <span id="detailsCurrency">INR</span>
+              </div>
+              <div class="mb-3">
+                <strong>Last Updated:</strong> <span id="detailsLastUpdate">--</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top: 1px solid rgba(255,255,255,0.1);">
+        <button type="button" class="btn btn-secondary-custom" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary-custom" id="addToWatchlist">Add to Watchlist</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+// filepath: c:\Users\Freida\Desktop\Stock market (black)\index.html
+function scrollToWatchlist() {
+  const section = document.querySelector('.watchlist-section');
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function scrollToMarket() {
+  const section = document.querySelector('.market-section');
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+// Menu logic
+const menuBtn = document.getElementById("menuBtn");
+const sideMenu = document.getElementById("sideMenu");
+const closeMenuBtn = document.getElementById("closeMenu");
+
+menuBtn.onclick = function() {
+  sideMenu.style.right = "0";
+};
+
+function closeMenu() {
+  sideMenu.style.right = "-260px";
+}
+
+closeMenuBtn.onclick = closeMenu;
+
+// Optional: close menu when clicking outside
+document.addEventListener("click", function(e) {
+  if (sideMenu.style.right === "0px" && !sideMenu.contains(e.target) && e.target !== menuBtn) {
+    closeMenu();
+  }
+});
+</script>
+
+</body>
+</html>
